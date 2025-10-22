@@ -1,6 +1,7 @@
-Hi {first},
+Hi everyone,
 
 This is a test email sent automatically using Python.
 
 Regards,
 Saloni
+
