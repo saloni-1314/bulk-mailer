@@ -1,0 +1,6 @@
+Hi {first},
+
+This is a test email sent automatically using Python.
+
+Regards,
+Saloni
