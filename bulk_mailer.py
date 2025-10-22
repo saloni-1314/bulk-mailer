@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 bulk_mailer.py
 
@@ -34,7 +33,6 @@ def load_recipients(csv_path: str) -> List[Dict[str,str]]:
         for row in reader:
             if not row or row[0].strip().startswith('#'):
                 continue
-            # Expect at least email, optionally first, last
             email = row[0].strip()
             first = row[1].strip() if len(row) > 1 else ""
             last  = row[2].strip() if len(row) > 2 else ""
@@ -48,7 +46,6 @@ def load_file_text(path: str) -> str:
 def build_message(sender: str, recipient: dict, subject_template: str, body_template: str,
                   is_html: bool=False, attachment_path: str=None) -> EmailMessage:
     msg = EmailMessage()
-    # Personalize subject/body using .format — safe placeholders: first,last,email
     subs = { "first": recipient.get("first",""), "last": recipient.get("last",""), "email": recipient.get("email","") }
     subject = subject_template.format(**subs)
     body = body_template.format(**subs)
@@ -86,7 +83,6 @@ def send_bulk(smtp_server: str, port: int, user: str, password: str,
               attachment_path: str, delay: float, use_tls: bool=True):
     context = ssl.create_default_context()
 
-    # Choose SMTP connection method (STARTTLS on port 587 is common)
     with smtplib.SMTP(smtp_server, port, timeout=60) as server:
         server.ehlo()
         if use_tls:
@@ -103,7 +99,6 @@ def send_bulk(smtp_server: str, port: int, user: str, password: str,
                 print(f"[{i}/{len(recipients)}] Sent to {r['email']}")
             except Exception as e:
                 print(f"[{i}/{len(recipients)}] ERROR sending to {r['email']}: {e}")
-            # rate limit/polite delay to avoid tripping provider limits or spam filters
             if delay > 0 and i != len(recipients):
                 time.sleep(delay)
         print(f"Done. Sent: {sent}/{len(recipients)}")
